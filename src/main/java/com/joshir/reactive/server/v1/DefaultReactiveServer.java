@@ -51,11 +51,9 @@ public class DefaultReactiveServer implements ReactiveServer {
           if (key.isValid()) {
             if (key.isAcceptable()) {
               var sc = server.accept();
-
               sc.configureBlocking(false);
               var readsProcessor = UnicastProcessor.create(Queues.<SelectionKey>one().get());
               var writesProcessor = UnicastProcessor.create(Queues.<SelectionKey>one().get());
-
               connections.put(sc, Tuples.of(readsProcessor.sink(), writesProcessor.sink()));
               sink.next(connectionsHandler.apply(new DefaultConnection(sc, key, readsProcessor, writesProcessor)).subscribe());
             }
